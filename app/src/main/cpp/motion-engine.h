@@ -78,6 +78,9 @@ public:
     // Updates path coordinate using the dynamic nextStride and smoothed heading
     void addStep(float headingDegrees, bool isSimulator);
 
+    // Fuses the PDR location with absolute Wi-Fi coordinates
+    void fuseLocation(float wifiX, float wifiY, float beta);
+
     // Resets positions and clear histories
     void reset();
 

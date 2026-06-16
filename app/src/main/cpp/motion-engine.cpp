@@ -213,6 +213,15 @@ void MotionEngine::addStep(float headingDegrees, bool isSimulator) {
          stepCount, nextStride, currentHeading, currentX, currentY);
 }
 
+void MotionEngine::fuseLocation(float wifiX, float wifiY, float beta) {
+    std::lock_guard<std::mutex> lock(engineMutex);
+    currentX = (1.0f - beta) * currentX + beta * wifiX;
+    currentY = (1.0f - beta) * currentY + beta * wifiY;
+    if (!pathPoints.empty()) {
+        pathPoints.back() = {currentX, currentY};
+    }
+}
+
 // Reset the entire engine state
 void MotionEngine::reset() {
     std::lock_guard<std::mutex> lock(engineMutex);
@@ -321,6 +330,15 @@ Java_com_example_imumotiontracer_NativeMotionEngine_updateHeading(
     auto* engine = reinterpret_cast<MotionEngine*>(native_ptr);
     if (engine != nullptr) {
         engine->updateHeading(heading_degrees);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_com_example_imumotiontracer_NativeMotionEngine_fuseLocation(
+        JNIEnv* env, jobject thiz, jlong native_ptr, jfloat wifi_x, jfloat wifi_y, jfloat beta) {
+    auto* engine = reinterpret_cast<MotionEngine*>(native_ptr);
+    if (engine != nullptr) {
+        engine->fuseLocation(wifi_x, wifi_y, beta);
     }
 }
 

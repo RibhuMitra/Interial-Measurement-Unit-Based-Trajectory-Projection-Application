@@ -59,6 +59,15 @@ class NativeMotionEngine(
     }
 
     /**
+     * Fuses the current PDR coordinate with Wi-Fi coordinate.
+     */
+    fun fuseLocation(wifiX: Float, wifiY: Float, beta: Float) {
+        if (nativePtr != 0L) {
+            fuseLocation(nativePtr, wifiX, wifiY, beta)
+        }
+    }
+
+    /**
      * Reset the engine state (steps, position, and path points).
      */
     fun reset() {
@@ -122,6 +131,7 @@ class NativeMotionEngine(
     private external fun processSensorData(nativePtr: Long, x: Float, y: Float, z: Float, timestampNs: Long): Boolean
     private external fun updateHeading(nativePtr: Long, headingDegrees: Float)
     private external fun addStep(nativePtr: Long, headingDegrees: Float, isSimulator: Boolean)
+    private external fun fuseLocation(nativePtr: Long, wifiX: Float, wifiY: Float, beta: Float)
     private external fun resetEngine(nativePtr: Long)
     private external fun getStepCount(nativePtr: Long): Int
     private external fun getDistance(nativePtr: Long): Float
