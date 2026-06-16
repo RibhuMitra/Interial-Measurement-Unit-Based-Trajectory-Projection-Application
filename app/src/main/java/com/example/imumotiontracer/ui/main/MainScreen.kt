@@ -79,18 +79,26 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-// Color Palette
-private val DarkObsidian = Color(0xFF0D0E12)
-private val SlateSteel = Color(0xFF1B1D26)
-private val BorderGray = Color(0xFF2E3240)
-private val NeonCyan = Color(0xFF00E5FF)
-private val NeonGreen = Color(0xFF39FF14)
-private val CyberOrange = Color(0xFFFF5722)
-private val MutedText = Color(0xFF8E95A5)
+// Professional White & Dark / Liquid Glass Color Palette
+private val DarkObsidian = Color(0xFF08090C)
+private val GlassCardBg = Color(0x14FFFFFF) // Frosted white glass
+private val GlassCardBorder = Color(0x22FFFFFF) // Subtle outline
+private val WhiteButtonBg = Color(0xFFFFFFFF)
+private val DarkGlassButtonBg = Color(0x24FFFFFF)
+private val TextWhite = Color(0xFFFFFFFF)
+private val TextDark = Color(0xFF08090C)
+private val MutedText = Color(0xFF94A3B8)
+private val GlowingCyan = Color(0xFF38BDF8) // Sleek sky highlight
 
-private val SignalExcellent = Color(0xFF39FF14)
-private val SignalFair = Color(0xFFFFEB3B)
-private val SignalPoor = Color(0xFFFF5722)
+private val SignalExcellent = Color(0xFF4ADE80)
+private val SignalFair = Color(0xFFFACC15)
+private val SignalPoor = Color(0xFFF87171)
+
+// Canvas & Legacy Aliases
+private val NeonCyan = GlowingCyan
+private val NeonGreen = SignalExcellent
+private val CyberOrange = Color(0xFFFB923C) // Sleek orange
+private val BorderGray = GlassCardBorder
 
 @Composable
 fun MainScreen(
@@ -342,7 +350,7 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             NavigationBar(
-                containerColor = SlateSteel,
+                containerColor = GlassCardBg,
                 tonalElevation = 8.dp
             ) {
                 listOf(
@@ -366,11 +374,11 @@ fun MainScreen(
                         },
                         label = { Text(title, fontSize = 10.sp) },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = NeonCyan,
+                            selectedIconColor = TextWhite,
                             unselectedIconColor = MutedText,
-                            selectedTextColor = NeonCyan,
+                            selectedTextColor = TextWhite,
                             unselectedTextColor = MutedText,
-                            indicatorColor = BorderGray
+                            indicatorColor = GlassCardBorder
                         )
                     )
                 }
@@ -406,13 +414,13 @@ fun MainScreen(
                             }
                             Box(
                                 modifier = Modifier
-                                    .background(if (simMode) SlateSteel else NeonCyan.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
-                                    .border(1.dp, if (simMode) BorderGray else NeonCyan, RoundedCornerShape(12.dp))
+                                    .background(if (simMode) DarkGlassButtonBg else WhiteButtonBg, RoundedCornerShape(16.dp))
+                                    .border(1.dp, GlassCardBorder, RoundedCornerShape(16.dp))
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
                                 Text(
                                     text = if (simMode) "Mode: Simulator" else "Mode: Sensors Active",
-                                    color = if (simMode) Color.White else NeonCyan,
+                                    color = if (simMode) TextWhite else TextDark,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -421,19 +429,34 @@ fun MainScreen(
 
                         // --- TELEMETRY SCOREBOARD ---
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Card(modifier = Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = SlateSteel)) {
+                            Card(
+                                modifier = Modifier.weight(1f),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(16.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text("STEPS", color = MutedText, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                                    Text("$stepCount", color = NeonGreen, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                                    Text("$stepCount", color = TextWhite, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
                                 }
                             }
-                            Card(modifier = Modifier.weight(1.2f), colors = CardDefaults.cardColors(containerColor = SlateSteel)) {
+                            Card(
+                                modifier = Modifier.weight(1.2f),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(16.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text("EST. DISTANCE", color = MutedText, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                                    Text(String.format("%.2f m", distance), color = NeonCyan, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                                    Text(String.format("%.2f m", distance), color = GlowingCyan, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
                                 }
                             }
-                            Card(modifier = Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = SlateSteel)) {
+                            Card(
+                                modifier = Modifier.weight(1f),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(16.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 val dispHeading = if (simMode) simHeading else rawHeading
                                 val cardinal = when (dispHeading.toInt()) {
                                     in 338..360, in 0..22 -> "N"
@@ -448,7 +471,7 @@ fun MainScreen(
                                 }
                                 Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text("HEADING", color = MutedText, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                                    Text(String.format("%d° %s", dispHeading.toInt(), cardinal), color = CyberOrange, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                                    Text(String.format("%d° %s", dispHeading.toInt(), cardinal), color = TextWhite, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
                                 }
                             }
                         }
@@ -458,9 +481,9 @@ fun MainScreen(
                         // --- PATH CANVAS ---
                         Card(
                             modifier = Modifier.fillMaxWidth().height(300.dp),
-                            colors = CardDefaults.cardColors(containerColor = SlateSteel),
-                            shape = RoundedCornerShape(8.dp),
-                            border = BorderStroke(1.dp, BorderGray)
+                            colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                            shape = RoundedCornerShape(20.dp),
+                            border = BorderStroke(1.dp, GlassCardBorder)
                         ) {
                             Box(modifier = Modifier.fillMaxSize()) {
                                 Canvas(
@@ -627,24 +650,29 @@ fun MainScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // --- MODE SELECTION ---
-                        Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel), border = BorderStroke(1.dp, BorderGray)) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                            shape = RoundedCornerShape(20.dp),
+                            border = BorderStroke(1.dp, GlassCardBorder)
+                        ) {
                             Column(modifier = Modifier.padding(12.dp)) {
-                                Text("INTEGRATION MODE", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text("INTEGRATION MODE", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     Button(
                                         onClick = { simMode = true },
                                         modifier = Modifier.weight(1f),
-                                        colors = ButtonDefaults.buttonColors(containerColor = if (simMode) NeonCyan.copy(alpha = 0.2f) else DarkObsidian, contentColor = if (simMode) NeonCyan else MutedText),
-                                        shape = RoundedCornerShape(6.dp),
-                                        border = BorderStroke(1.dp, if (simMode) NeonCyan else BorderGray)
+                                        colors = ButtonDefaults.buttonColors(containerColor = if (simMode) WhiteButtonBg else DarkGlassButtonBg, contentColor = if (simMode) TextDark else TextWhite),
+                                        shape = RoundedCornerShape(14.dp),
+                                        border = if (simMode) null else BorderStroke(1.dp, GlassCardBorder)
                                     ) { Text("Simulator") }
                                     Button(
                                         onClick = { simMode = false },
                                         modifier = Modifier.weight(1f),
-                                        colors = ButtonDefaults.buttonColors(containerColor = if (!simMode) NeonCyan.copy(alpha = 0.2f) else DarkObsidian, contentColor = if (!simMode) NeonCyan else MutedText),
-                                        shape = RoundedCornerShape(6.dp),
-                                        border = BorderStroke(1.dp, if (!simMode) NeonCyan else BorderGray)
+                                        colors = ButtonDefaults.buttonColors(containerColor = if (!simMode) WhiteButtonBg else DarkGlassButtonBg, contentColor = if (!simMode) TextDark else TextWhite),
+                                        shape = RoundedCornerShape(14.dp),
+                                        border = if (!simMode) null else BorderStroke(1.dp, GlassCardBorder)
                                     ) { Text("Live Sensors") }
                                 }
                             }
@@ -654,9 +682,14 @@ fun MainScreen(
 
                         // --- SIMULATOR CONTROLLERS ---
                         if (simMode) {
-                            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel), border = BorderStroke(1.dp, BorderGray)) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 Column(modifier = Modifier.padding(12.dp)) {
-                                    Text("WALK SIMULATOR", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text("WALK SIMULATOR", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                     Spacer(modifier = Modifier.height(12.dp))
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                         Button(
@@ -674,18 +707,30 @@ fun MainScreen(
                                                 pathCoordinates = nativeEngine.getPathPoints()
                                             },
                                             modifier = Modifier.weight(1.2f),
-                                            colors = ButtonDefaults.buttonColors(containerColor = NeonCyan, contentColor = Color.Black),
-                                            shape = RoundedCornerShape(6.dp)
+                                            colors = ButtonDefaults.buttonColors(containerColor = WhiteButtonBg, contentColor = TextDark),
+                                            shape = RoundedCornerShape(14.dp)
                                         ) { Text("Walk Step 🚶", fontWeight = FontWeight.Bold) }
-                                        Button(onClick = { simHeading = (simHeading - 15f + 360f) % 360f }, modifier = Modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = DarkObsidian, contentColor = Color.White), shape = RoundedCornerShape(6.dp), border = BorderStroke(1.dp, BorderGray)) { Text("↩️ Turn L") }
-                                        Button(onClick = { simHeading = (simHeading + 15f) % 360f }, modifier = Modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = DarkObsidian, contentColor = Color.White), shape = RoundedCornerShape(6.dp), border = BorderStroke(1.dp, BorderGray)) { Text("Turn R ↪️") }
+                                        Button(
+                                            onClick = { simHeading = (simHeading - 15f + 360f) % 360f },
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.buttonColors(containerColor = DarkGlassButtonBg, contentColor = TextWhite),
+                                            shape = RoundedCornerShape(14.dp),
+                                            border = BorderStroke(1.dp, GlassCardBorder)
+                                        ) { Text("↩️ Turn L") }
+                                        Button(
+                                            onClick = { simHeading = (simHeading + 15f) % 360f },
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.buttonColors(containerColor = DarkGlassButtonBg, contentColor = TextWhite),
+                                            shape = RoundedCornerShape(14.dp),
+                                            border = BorderStroke(1.dp, GlassCardBorder)
+                                        ) { Text("Turn R ↪️") }
                                     }
                                     Spacer(modifier = Modifier.height(12.dp))
-                                    Text("Simulated Heading: ${simHeading.toInt()}°", color = Color.White, fontSize = 11.sp)
-                                    Slider(value = simHeading, onValueChange = { simHeading = it }, valueRange = 0f..359f, colors = SliderDefaults.colors(thumbColor = CyberOrange, activeTrackColor = CyberOrange.copy(alpha = 0.5f)))
+                                    Text("Simulated Heading: ${simHeading.toInt()}°", color = TextWhite, fontSize = 11.sp)
+                                    Slider(value = simHeading, onValueChange = { simHeading = it }, valueRange = 0f..359f, colors = SliderDefaults.colors(thumbColor = GlowingCyan, activeTrackColor = GlowingCyan.copy(alpha = 0.5f)))
                                     
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    Text("Auto Walking Scripts", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                                    Text("Auto Walking Scripts", color = TextWhite, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         listOf("Square", "Zig-Zag", "Spiral", "Wander").forEach { pattern ->
@@ -787,9 +832,9 @@ fun MainScreen(
                                                 },
                                                 modifier = Modifier.weight(1f),
                                                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
-                                                colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) CyberOrange else DarkObsidian, contentColor = Color.White),
-                                                shape = RoundedCornerShape(4.dp),
-                                                border = BorderStroke(1.dp, if (isRunning) CyberOrange else BorderGray)
+                                                colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) WhiteButtonBg else DarkGlassButtonBg, contentColor = if (isRunning) TextDark else TextWhite),
+                                                shape = RoundedCornerShape(10.dp),
+                                                border = if (isRunning) null else BorderStroke(1.dp, GlassCardBorder)
                                             ) { Text(if (isRunning) "Stop ⏹️" else pattern, fontSize = 10.sp) }
                                         }
                                     }
@@ -797,9 +842,14 @@ fun MainScreen(
                             }
                         } else {
                             // Live Sensor instruction
-                            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel), border = BorderStroke(1.dp, BorderGray)) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 Column(modifier = Modifier.padding(16.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text("LIVE SENSORS MODE ENGAGED", color = NeonCyan, fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                                    Text("LIVE SENSORS MODE ENGAGED", color = GlowingCyan, fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                                     Spacer(modifier = Modifier.height(6.dp))
                                     Text("Hold phone horizontally and walk. C++ reads accelerometer signals to count steps while fusing continuously-smoothed rotation vector heading.", color = MutedText, fontSize = 10.sp, textAlign = TextAlign.Center)
                                 }
@@ -809,18 +859,23 @@ fun MainScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // --- ACCELEROMETER SIGNAL GRAPH ---
-                        Card(modifier = Modifier.fillMaxWidth().height(150.dp), colors = CardDefaults.cardColors(containerColor = SlateSteel), shape = RoundedCornerShape(8.dp), border = BorderStroke(1.dp, BorderGray)) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth().height(150.dp),
+                            colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                            shape = RoundedCornerShape(20.dp),
+                            border = BorderStroke(1.dp, GlassCardBorder)
+                        ) {
                             Column(modifier = Modifier.padding(10.dp)) {
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                    Text("VIBRATION SIGNAL (ACCEL MAG)", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text("VIBRATION SIGNAL (ACCEL MAG)", color = TextWhite, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                     Text(String.format("%.2f m/s²", currentRawMag), color = NeonGreen, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                                 }
                                 Spacer(modifier = Modifier.height(6.dp))
-                                Canvas(modifier = Modifier.fillMaxWidth().weight(1f).background(DarkObsidian, RoundedCornerShape(4.dp))) {
+                                Canvas(modifier = Modifier.fillMaxWidth().weight(1f).background(DarkObsidian, RoundedCornerShape(8.dp))) {
                                     val w = size.width
                                     val h = size.height
                                     val gravityY = h / 2f
-                                    drawLine(color = BorderGray, start = Offset(0f, gravityY), end = Offset(w, gravityY), strokeWidth = 1f)
+                                    drawLine(color = GlassCardBorder.copy(alpha = 0.5f), start = Offset(0f, gravityY), end = Offset(w, gravityY), strokeWidth = 1f)
                                     val thresholdY = gravityY - (sensitivity * (h / 15f))
                                     drawLine(color = CyberOrange.copy(alpha = 0.5f), start = Offset(0f, thresholdY), end = Offset(w, thresholdY), strokeWidth = 1f)
 
@@ -854,51 +909,56 @@ fun MainScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // --- CALIBRATION SETTINGS ---
-                        Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel), shape = RoundedCornerShape(8.dp), border = BorderStroke(1.dp, BorderGray)) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                            shape = RoundedCornerShape(20.dp),
+                            border = BorderStroke(1.dp, GlassCardBorder)
+                        ) {
                             Column(modifier = Modifier.padding(12.dp)) {
-                                Text("CALIBRATION & PARAMETERS", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text("CALIBRATION & PARAMETERS", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.height(12.dp))
 
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text("Weinberg Stride Factor (K)", color = Color.White, fontSize = 11.sp)
-                                    Text(String.format("%.3f", stepLength), color = NeonCyan, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                                    Text("Weinberg Stride Factor (K)", color = TextWhite, fontSize = 11.sp)
+                                    Text(String.format("%.3f", stepLength), color = GlowingCyan, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                                 }
-                                Slider(value = stepLength, onValueChange = { stepLength = it }, valueRange = 0.25f..0.75f, colors = SliderDefaults.colors(thumbColor = NeonCyan, activeTrackColor = NeonCyan.copy(alpha = 0.5f)))
+                                Slider(value = stepLength, onValueChange = { stepLength = it }, valueRange = 0.25f..0.75f, colors = SliderDefaults.colors(thumbColor = GlowingCyan, activeTrackColor = GlowingCyan.copy(alpha = 0.5f)))
 
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text("Peak Detection Threshold", color = Color.White, fontSize = 11.sp)
+                                    Text("Peak Detection Threshold", color = TextWhite, fontSize = 11.sp)
                                     Text(String.format("%.2f m/s²", sensitivity), color = NeonGreen, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                                 }
                                 Slider(value = sensitivity, onValueChange = { sensitivity = it }, valueRange = 0.5f..2.5f, colors = SliderDefaults.colors(thumbColor = NeonGreen, activeTrackColor = NeonGreen.copy(alpha = 0.5f)))
 
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text("Low-Pass Alpha (Smoothness)", color = Color.White, fontSize = 11.sp)
+                                    Text("Low-Pass Alpha (Smoothness)", color = TextWhite, fontSize = 11.sp)
                                     Text(String.format("%.2f", filterAlpha), color = CyberOrange, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                                 }
                                 Slider(value = filterAlpha, onValueChange = { filterAlpha = it }, valueRange = 0.05f..0.4f, colors = SliderDefaults.colors(thumbColor = CyberOrange, activeTrackColor = CyberOrange.copy(alpha = 0.5f)))
 
-                                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = BorderGray)
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = GlassCardBorder)
 
                                 // FUSION SETTINGS
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                     Column {
-                                        Text("Wi-Fi ML Location Fusion", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                        Text("Wi-Fi ML Location Fusion", color = TextWhite, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                         Text("Correct PDR drift dynamically using KNN", color = MutedText, fontSize = 9.sp)
                                     }
                                     Switch(
                                         checked = wifiFusionEnabled,
                                         onCheckedChange = { wifiFusionEnabled = it },
-                                        colors = SwitchDefaults.colors(checkedThumbColor = NeonCyan, checkedTrackColor = NeonCyan.copy(alpha = 0.5f))
+                                        colors = SwitchDefaults.colors(checkedThumbColor = WhiteButtonBg, checkedTrackColor = GlowingCyan, uncheckedThumbColor = MutedText, uncheckedTrackColor = DarkGlassButtonBg)
                                     )
                                 }
 
                                 AnimatedVisibility(visible = wifiFusionEnabled) {
                                     Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
                                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                            Text("Fusion Weight (Beta)", color = Color.White, fontSize = 11.sp)
-                                            Text(String.format("%.2f", fusionBeta), color = NeonCyan, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                                            Text("Fusion Weight (Beta)", color = TextWhite, fontSize = 11.sp)
+                                            Text(String.format("%.2f", fusionBeta), color = GlowingCyan, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                                         }
-                                        Slider(value = fusionBeta, onValueChange = { fusionBeta = it }, valueRange = 0.05f..0.95f, colors = SliderDefaults.colors(thumbColor = NeonCyan, activeTrackColor = NeonCyan.copy(alpha = 0.5f)))
+                                        Slider(value = fusionBeta, onValueChange = { fusionBeta = it }, valueRange = 0.05f..0.95f, colors = SliderDefaults.colors(thumbColor = GlowingCyan, activeTrackColor = GlowingCyan.copy(alpha = 0.5f)))
                                     }
                                 }
                             }
@@ -908,8 +968,8 @@ fun MainScreen(
 
                         // --- RESET BUTTON ---
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Button(onClick = { resetEngineAndStats() }, modifier = Modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)), shape = RoundedCornerShape(6.dp)) {
-                                Text("Reset Session 🗑️", color = Color.White, fontWeight = FontWeight.Bold)
+                            Button(onClick = { resetEngineAndStats() }, modifier = Modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F).copy(alpha = 0.8f)), shape = RoundedCornerShape(14.dp)) {
+                                Text("Reset Session 🗑️", color = TextWhite, fontWeight = FontWeight.Bold)
                             }
                         }
                         Spacer(modifier = Modifier.height(24.dp))
@@ -923,30 +983,34 @@ fun MainScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Wi-Fi Access Points (${scanResults.size})", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text("Wi-Fi Access Points (${scanResults.size})", color = TextWhite, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                             Button(
                                 onClick = { wifiScanManager.startScan() },
                                 enabled = !isScanning,
-                                colors = ButtonDefaults.buttonColors(containerColor = NeonCyan, contentColor = Color.Black),
-                                shape = RoundedCornerShape(6.dp)
+                                colors = ButtonDefaults.buttonColors(containerColor = WhiteButtonBg, contentColor = TextDark),
+                                shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(if (isScanning) "Scanning..." else "Scan Now 🔄", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                             }
                         }
 
                         Row(
-                            modifier = Modifier.fillMaxWidth().background(SlateSteel, RoundedCornerShape(8.dp)).padding(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(GlassCardBg, RoundedCornerShape(16.dp))
+                                .border(BorderStroke(1.dp, GlassCardBorder), RoundedCornerShape(16.dp))
+                                .padding(12.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Filter Target MACs", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text("Filter Target MACs", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 Text("Show registered filters only", color = MutedText, fontSize = 10.sp)
                             }
                             Switch(
                                 checked = showOnlyFiltered,
                                 onCheckedChange = { showOnlyFiltered = it },
-                                colors = SwitchDefaults.colors(checkedThumbColor = NeonCyan, checkedTrackColor = NeonCyan.copy(alpha = 0.5f))
+                                colors = SwitchDefaults.colors(checkedThumbColor = WhiteButtonBg, checkedTrackColor = GlowingCyan, uncheckedThumbColor = MutedText, uncheckedTrackColor = DarkGlassButtonBg)
                             )
                         }
 
@@ -965,10 +1029,14 @@ fun MainScreen(
                         } else {
                             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxSize()) {
                                 items(displayedAps) { ap ->
-                                    Card(colors = CardDefaults.cardColors(containerColor = SlateSteel)) {
+                                    Card(
+                                        colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                        shape = RoundedCornerShape(16.dp),
+                                        border = BorderStroke(1.dp, GlassCardBorder)
+                                    ) {
                                         Row(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                             Column(modifier = Modifier.weight(1f)) {
-                                                Text(if (ap.SSID.isNullOrEmpty()) "Hidden SSID" else ap.SSID, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                                Text(if (ap.SSID.isNullOrEmpty()) "Hidden SSID" else ap.SSID, color = TextWhite, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                                 Text("${ap.BSSID.uppercase()} | ${ap.frequency} MHz", color = MutedText, fontSize = 11.sp)
                                             }
                                             val qualityColor = when {
@@ -1008,9 +1076,14 @@ fun MainScreen(
                     }
 
                     Column(modifier = Modifier.fillMaxSize()) {
-                        Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel)) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                            shape = RoundedCornerShape(20.dp),
+                            border = BorderStroke(1.dp, GlassCardBorder)
+                        ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text("Add MAC Filter", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                Text("Add MAC Filter", color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text("Input router MAC (BSSID) for targeted ML fingerprint tracking.", color = MutedText, fontSize = 11.sp)
                                 Spacer(modifier = Modifier.height(12.dp))
@@ -1020,7 +1093,8 @@ fun MainScreen(
                                     placeholder = { Text("AA:BB:CC:DD:EE:FF", color = MutedText) },
                                     singleLine = true,
                                     isError = inputError != null,
-                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = NeonCyan, unfocusedBorderColor = BorderGray, focusedTextColor = Color.White, unfocusedTextColor = Color.White),
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = GlowingCyan, unfocusedBorderColor = GlassCardBorder, focusedTextColor = TextWhite, unfocusedTextColor = TextWhite),
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Done),
                                     keyboardActions = KeyboardActions(onDone = { submitFilter() }),
                                     modifier = Modifier.fillMaxWidth()
@@ -1031,15 +1105,15 @@ fun MainScreen(
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Button(
                                     onClick = { submitFilter() },
-                                    colors = ButtonDefaults.buttonColors(containerColor = NeonCyan, contentColor = Color.Black),
-                                    shape = RoundedCornerShape(6.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = WhiteButtonBg, contentColor = TextDark),
+                                    shape = RoundedCornerShape(14.dp),
                                     modifier = Modifier.align(Alignment.End)
                                 ) { Text("Add MAC Filter", fontWeight = FontWeight.Bold) }
                             }
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Active MAC Filters (${macFilters.size})", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                        Text("Active MAC Filters (${macFilters.size})", color = TextWhite, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
 
                         if (macFilters.isEmpty()) {
@@ -1049,9 +1123,13 @@ fun MainScreen(
                         } else {
                             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
                                 items(macFilters.toList()) { mac ->
-                                    Card(colors = CardDefaults.cardColors(containerColor = SlateSteel)) {
+                                    Card(
+                                        colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                        shape = RoundedCornerShape(16.dp),
+                                        border = BorderStroke(1.dp, GlassCardBorder)
+                                    ) {
                                         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                            Text(mac, color = NeonCyan, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                            Text(mac, color = GlowingCyan, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                             IconButton(onClick = { wifiScanManager.removeMacFilter(mac) }) {
                                                 Icon(Icons.Default.Delete, contentDescription = "Delete filter", tint = SignalPoor)
                                             }
@@ -1084,8 +1162,9 @@ fun MainScreen(
                         item {
                             Card(
                                 modifier = Modifier.fillMaxWidth().aspectRatio(1.2f),
-                                colors = CardDefaults.cardColors(containerColor = SlateSteel),
-                                border = BorderStroke(1.dp, BorderGray)
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
                             ) {
                                 Box(modifier = Modifier.fillMaxSize()) {
                                     if (floorPlanBitmap != null) {
@@ -1095,7 +1174,7 @@ fun MainScreen(
                                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                                 Icon(Icons.Default.Settings, contentDescription = "No floor plan", tint = MutedText, modifier = Modifier.size(48.dp))
                                                 Spacer(modifier = Modifier.height(8.dp))
-                                                Text("No Floor Plan Loaded", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                                Text("No Floor Plan Loaded", color = TextWhite, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                                 Text("Upload blueprint image below to map Wi-Fi", color = MutedText, fontSize = 11.sp)
                                             }
                                         }
@@ -1125,11 +1204,11 @@ fun MainScreen(
                                                             .weight(1f)
                                                             .fillMaxHeight()
                                                             .background(cellColor)
-                                                            .border(BorderStroke(if (isSelected) 2.dp else 0.5.dp, if (isSelected) NeonCyan else BorderGray.copy(alpha = 0.3f)))
+                                                            .border(BorderStroke(if (isSelected) 2.dp else 0.5.dp, if (isSelected) TextWhite else GlassCardBorder.copy(alpha = 0.3f)))
                                                             .clickable { selectedCell = Pair(r, c) },
                                                         contentAlignment = Alignment.Center
                                                     ) {
-                                                        Text(cellTag, fontSize = 9.sp, color = if (isSelected) NeonCyan else MutedText, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal)
+                                                        Text(cellTag, fontSize = 9.sp, color = if (isSelected) TextWhite else MutedText, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal)
                                                     }
                                                 }
                                             }
@@ -1145,15 +1224,17 @@ fun MainScreen(
                                 Button(
                                     onClick = { imagePickerLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly)) },
                                     modifier = Modifier.weight(1f),
-                                    colors = ButtonDefaults.buttonColors(containerColor = SlateSteel, contentColor = Color.White),
-                                    border = BorderStroke(1.dp, BorderGray)
+                                    colors = ButtonDefaults.buttonColors(containerColor = DarkGlassButtonBg, contentColor = TextWhite),
+                                    shape = RoundedCornerShape(14.dp),
+                                    border = BorderStroke(1.dp, GlassCardBorder)
                                 ) { Text("Change Blueprint", fontSize = 12.sp) }
 
                                 if (floorPlanUriString != null) {
                                     Button(
                                         onClick = { wifiScanManager.setFloorPlanUri(null) },
                                         modifier = Modifier.weight(1f),
-                                        colors = ButtonDefaults.buttonColors(containerColor = SlateSteel, contentColor = SignalPoor),
+                                        colors = ButtonDefaults.buttonColors(containerColor = DarkGlassButtonBg, contentColor = SignalPoor),
+                                        shape = RoundedCornerShape(14.dp),
                                         border = BorderStroke(1.dp, SignalPoor.copy(alpha = 0.4f))
                                     ) { Text("Remove Blueprint", fontSize = 12.sp) }
                                 }
@@ -1163,7 +1244,12 @@ fun MainScreen(
                         // Recording Calibration Panel
                         item {
                             val cell = selectedCell
-                            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel), border = BorderStroke(1.dp, BorderGray)) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
                                     if (cell != null) {
                                         val colChar = ('A' + cell.second).toString()
@@ -1172,7 +1258,7 @@ fun MainScreen(
 
                                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                             Column {
-                                                Text("Selected Calibration Cell: $cellTag", color = NeonCyan, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                                                Text("Selected Calibration Cell: $cellTag", color = GlowingCyan, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                                                 Text("${cellMs.size} RSSI Fingerprints Saved", color = MutedText, fontSize = 12.sp)
                                             }
                                             Button(
@@ -1199,8 +1285,8 @@ fun MainScreen(
                                                     }
                                                     Toast.makeText(context, "Fingerprinted cell $cellTag", Toast.LENGTH_SHORT).show()
                                                 },
-                                                colors = ButtonDefaults.buttonColors(containerColor = NeonGreen, contentColor = Color.Black),
-                                                shape = RoundedCornerShape(6.dp),
+                                                colors = ButtonDefaults.buttonColors(containerColor = WhiteButtonBg, contentColor = TextDark),
+                                                shape = RoundedCornerShape(14.dp),
                                                 enabled = !isScanning && scanResults.isNotEmpty()
                                             ) { Text("Record Fingerprint", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                                         }
@@ -1212,9 +1298,9 @@ fun MainScreen(
                                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                                 cellMs.sortedByDescending { it.timestamp }.take(5).forEach { m ->
                                                     val timeStr = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(m.timestamp))
-                                                    Row(modifier = Modifier.fillMaxWidth().background(DarkObsidian, RoundedCornerShape(6.dp)).border(1.dp, BorderGray, RoundedCornerShape(6.dp)).padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                                    Row(modifier = Modifier.fillMaxWidth().background(DarkGlassButtonBg, RoundedCornerShape(12.dp)).border(1.dp, GlassCardBorder, RoundedCornerShape(12.dp)).padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                                         Column {
-                                                            Text(m.ssid, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                                            Text(m.ssid, color = TextWhite, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                                             Text("${m.bssid} | ${m.frequency} MHz", color = MutedText, fontSize = 10.sp)
                                                         }
                                                         Column(horizontalAlignment = Alignment.End) {
@@ -1234,9 +1320,14 @@ fun MainScreen(
 
                         // Export and Reset panel
                         item {
-                            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = SlateSteel), border = BorderStroke(1.dp, BorderGray)) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = GlassCardBg),
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(1.dp, GlassCardBorder)
+                            ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
-                                    Text("Fingerprint Database Management", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                    Text("Fingerprint Database Management", color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text("Total records in DB: ${measurements.size}", color = MutedText, fontSize = 12.sp)
                                     Spacer(modifier = Modifier.height(16.dp))
@@ -1266,14 +1357,16 @@ fun MainScreen(
                                                 }
                                             },
                                             modifier = Modifier.weight(1f),
-                                            colors = ButtonDefaults.buttonColors(containerColor = NeonCyan, contentColor = Color.Black),
+                                            colors = ButtonDefaults.buttonColors(containerColor = WhiteButtonBg, contentColor = TextDark),
+                                            shape = RoundedCornerShape(14.dp),
                                             enabled = measurements.isNotEmpty()
                                         ) { Text("EXPORT CSV", fontWeight = FontWeight.Bold) }
 
                                         Button(
                                             onClick = { wifiScanManager.clearAllMeasurements() },
                                             modifier = Modifier.weight(1f),
-                                            colors = ButtonDefaults.buttonColors(containerColor = DarkObsidian, contentColor = SignalPoor),
+                                            colors = ButtonDefaults.buttonColors(containerColor = DarkGlassButtonBg, contentColor = SignalPoor),
+                                            shape = RoundedCornerShape(14.dp),
                                             border = BorderStroke(1.dp, SignalPoor.copy(alpha = 0.4f)),
                                             enabled = measurements.isNotEmpty()
                                         ) { Text("CLEAR DB", fontWeight = FontWeight.Bold) }
